@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        :root {
+            --font-bold: "GilroySemiBold";
+            --primary: #ca9760;
+            --bg: #2a2e36;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.js::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 9;
+        }
+
+        .page-preloader {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 9999;
+            display: grid;
+            place-content: center;
+        }
+
+        .preload-logo {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .preload-logo img {
+            width: 100%;
+        }
+
+        .preload-text {
+            display: flex;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .text-chunk {
+            font-size: 2.5rem;
+            font-family: var(--font-bold);
+            overflow: hidden;
+        }
+
+        .text-chunk-1 {
+            color: var(--primary);
+            margin-right: 0.75rem;
+        }
+
+        .text-white {
+            color: #fff;
+        }
+
+        .no-backdrop-filter .app-sidebar,
+        .no-backdrop-filter .app-navigation {
+            background-color: #2a2e363d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-preloader" id="preloader">
+        <div>
+            <div class="preload-logo">
+                <img src="./img/logo.jpg" alt="Logo" />
+            </div>
+            <div class="preload-text">
+                <div class="text-chunk text-chunk-1">
+                    <div>BARM</div>
+                </div>
+                <div class="text-chunk text-white">
+                    <div>Soft</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        salom dunyo
+    </div>
+    <div class="page">
+        salom gsap
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
+
+    <script>
+        const preloader = document.querySelector('#preloader')
+        const page = document.querySelectorAll('.page')
+
+        function loaderAnimation(elem, callback) {
+            document.body.className = "js";
+            const _logo = elem.querySelector(".preload-logo img"),
+                _text = elem.querySelectorAll(".text-chunk div");
+
+            gsap.set([elem, _text, _logo], {
+                y: "100%",
+            });
+
+            gsap.to(elem, {
+                duration: 2.5,
+                y: 0,
+                ease: Power4.easeInOut,
+                onComplete: () => {
+                    gsap.to(_logo, {
+                        duration: 2,
+                        y: "0%",
+                        ease: Power4.easeInOut,
+                    });
+                    gsap.to(_text, {
+                        duration: 2,
+                        y: "0%",
+                        ease: Power4.easeInOut,
+                        delay: 0.5,
+                        stagger: 0.5,
+                    });
+                },
+            });
+
+            setTimeout(() => {
+                document.body.className = "";
+                gsap.to(_logo, {
+                    duration: 2,
+                    y: "-100%",
+                    ease: Power4.easeInOut,
+                });
+                gsap.to(_text, {
+                    duration: 2,
+                    y: "-100%",
+                    ease: Power4.easeInOut,
+                    stagger: 0.5,
+                    delay: 1,
+                    onComplete: () => {
+                        gsap.to(elem, {
+                            duration: 2.5,
+                            y: "-100%",
+                            ease: Power4.easeInOut,
+                        });
+                    },
+                });
+            }, 6000);
+        }
+
+        loaderAnimation(preloader, page)
+    </script>
+</body>
+</html>
